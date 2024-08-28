@@ -9,7 +9,40 @@ on:
       - main
 
 jobs:
+  test_model:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r deployment/requirements.txt
+
+    - name: Run model validation
+      run: |
+        python testing/model_test.py
+
+    - name: Validate model accuracy
+      run: |
+        accuracy=$(cat testing/accuracy.txt)
+        echo "Model accuracy is $accuracy"
+        if (( $(echo "$accuracy < 0.8" | bc -l) )); then
+          echo "Model accuracy is below 0.8, stopping deployment."
+          exit 1
+        else
+          echo "Model accuracy is acceptable."
+        fi
+
   deploy:
+    needs: test_model
     runs-on: ubuntu-latest
 
     steps:
@@ -32,7 +65,6 @@ jobs:
         aws-access-key-id: 'AKIAZNIBSUHCO6ZVC2UZ'
         aws-secret-access-key: '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'
         aws-region: 'us-east-1'
-
 
     - name: Login to AWS ECR
       uses: aws-actions/amazon-ecr-login@v1
