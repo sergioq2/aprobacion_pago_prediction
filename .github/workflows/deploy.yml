@@ -26,17 +26,19 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r deployment/requirements.txt
 
-    - name: Build Docker image
-      run: |
-        docker build -t bancolombia deployment/
-
-    - name: Login to AWS ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Login to AWS ECR
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build Docker image
+      run: |
+        docker build -t bancolombia deployment/
 
     - name: Build and Push to ECR
       env:
@@ -48,10 +50,6 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
     - name: Deploy to AWS Lambda using AWS CLI
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ${{ secrets.AWS_REGION }}
       run: |
         aws lambda update-function-code \
           --function-name bancolombia \
