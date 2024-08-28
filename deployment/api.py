@@ -6,6 +6,9 @@ from preprocessing import clean_data
 from prediction import predict
 import pandas as pd
 from typing import Dict, Any
+import logging
+
+
 
 app = FastAPI()
 
@@ -63,14 +66,19 @@ class InputData(BaseModel):
     ajustes_banco: str
     antiguedad: float
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 @app.post("/predict")
 async def get_prediction(data: InputData):
+    logger.info(f"Received data: {data}")
     try:
         df = clean_data(data.dict())
     except:
         df = clean_data(data)
     
     result = predict(df)
+    logger.info(f"Prediction result: {result}")
     return {
         'prediction': int(result['prediction']), 
         'probability': float(result['probability'])
