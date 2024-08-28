@@ -1,7 +1,0 @@
-fastapi
-mangum
-uvicorn
-pandas
-scikit-learn
-joblib
-imblearn
