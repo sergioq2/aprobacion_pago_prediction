@@ -1,10 +1,15 @@
 import joblib
 import pandas as pd
+import os
 
 def clean_data(valores):
+    base_path = os.path.dirname(__file__)
+    var_path = os.path.join(base_path, 'artifacts', 'variables_seleccionadas.pkl')
+    enc_path = os.path.join(base_path, 'artifacts', 'encoder.pkl')
+                            
     
-    variables = joblib.load('artifacts/variables_seleccionadas.pkl')
-    encoder = joblib.load('artifacts/encoder.pkl')
+    variables = joblib.load(var_path)
+    encoder = joblib.load(enc_path)
     categorical = encoder.feature_names_in_
 
     try:

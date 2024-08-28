@@ -1,8 +1,11 @@
 import joblib
 import pandas as pd
+import os
 
-def predict(data):    
-    model = joblib.load('artifacts/model_classification.pkl')
+def predict(data):
+    base_path = os.path.dirname(__file__)
+    model_path = os.path.join(base_path, 'artifacts', 'model_classification.pkl')
+    model = joblib.load(model_path)
     try:
         df = pd.DataFrame([data])
     except:
