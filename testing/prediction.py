@@ -4,7 +4,7 @@ import os
 
 def predict(data):
     base_path = os.path.dirname(__file__)
-    model_path = os.path.join(base_path, 'artifacts', 'model_classification.pkl')
+    model_path = os.path.join(base_path, 'model_classification.pkl')
     model = joblib.load(model_path)
     try:
         df = pd.DataFrame([data])

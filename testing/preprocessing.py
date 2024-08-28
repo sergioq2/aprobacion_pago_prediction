@@ -4,8 +4,8 @@ import os
 
 def clean_data(valores):
     base_path = os.path.dirname(__file__)
-    var_path = os.path.join(base_path, 'artifacts', 'variables_seleccionadas.pkl')
-    enc_path = os.path.join(base_path, 'artifacts', 'encoder.pkl')
+    var_path = os.path.join(base_path,'variables_seleccionadas.pkl')
+    enc_path = os.path.join(base_path,'encoder.pkl')
                             
     
     variables = joblib.load(var_path)
