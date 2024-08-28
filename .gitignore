@@ -2,3 +2,5 @@ banca_venv/
 data/
 datos_depurados/
 deployment/artifacts/model_classification.pkl
+testing/artifacts
+
