@@ -19,7 +19,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.10'
+        python-version: '3.11'
 
     - name: Install dependencies
       run: |
@@ -28,7 +28,7 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t fastapi-app .
+        docker build -t bancolombia .
 
     - name: Login to AWS ECR
       id: login-ecr
@@ -36,17 +36,17 @@ jobs:
 
     - name: Build and Push to ECR
       env:
-        ECR_REGISTRY: <tu-id-ecr>.dkr.ecr.<tu-region>.amazonaws.com
-        ECR_REPOSITORY: fastapi-app
+        ECR_REGISTRY: 646932767172.dkr.ecr.us-east-1.amazonaws.com
+        ECR_REPOSITORY: bancolombia
         IMAGE_TAG: latest
       run: |
-        docker tag fastapi-app:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker tag bancolombia:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
     - name: Deploy to AWS Lambda
       uses: aws-actions/aws-lambda-deploy@v1
       with:
-        function-name: fastapi-lambda
-        aws-region: <tu-region>
-        docker-image-uri: <tu-id-ecr>.dkr.ecr.<tu-region>.amazonaws.com/fastapi-app:latest
-        role: <tu-rol-lambda>
+        function-name: bancolombia
+        aws-region: us-east-1
+        docker-image-uri: 646932767172.dkr.ecr.us-east-1.amazonaws.com/bancolombia-app:latest
+        role: loka-chatbot-role-8pjp1ox3
