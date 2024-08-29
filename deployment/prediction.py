@@ -2,6 +2,7 @@ import joblib
 import pandas as pd
 
 joblib.parallel_backend('threading', n_jobs=1)
+
 def predict(data):    
     model = joblib.load('artifacts/model_classification.pkl')
     try:
